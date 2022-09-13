@@ -4,7 +4,7 @@ import { JsonRpcServer } from './json-rpc-server';
 import { JsonRpcConfig, JsonRpcModuleAsyncOptions, JsonRpcOptionsFactory } from './index';
 import { RpcRoutesResolver } from './rpc-routes-resolver';
 import { Injector } from '@nestjs/core/injector/injector';
-import { validatePath } from '@nestjs/common/utils/shared.utils';
+import { addLeadingSlash } from '@nestjs/common/utils/shared.utils';
 import { JsonRpcExplorer } from './json-rpc-explorer';
 
 export const JSON_RPC_OPTIONS = '__JSON_RPC_OPTIONS__';
@@ -50,7 +50,7 @@ export class JsonRpcModule implements OnModuleInit {
             module: JsonRpcModule,
             imports: [
                 ...options.imports || [],
-                DiscoveryModule,
+                true,
             ],
             providers: [
                 JsonRpcServer,
@@ -105,7 +105,7 @@ export class JsonRpcModule implements OnModuleInit {
             this.jsonRpcExplorer,
         );
         const prefix = this.nestConfig.getGlobalPrefix();
-        const basePath = validatePath(prefix);
+        const basePath = addLeadingSlash(prefix);
         const rpcHandlers = routesResolver.resolve(this.httpAdapterHost.httpAdapter, basePath);
         this.rpcServer.run(rpcHandlers, this.config);
     }

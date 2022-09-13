@@ -19,7 +19,7 @@ export interface RpcProxyHandler {
 }
 
 export class RpcRoutesResolver implements Resolver {
-    private readonly logger = new Logger(RpcRoutesResolver.name, true);
+    private readonly logger = new Logger(RpcRoutesResolver.name, {timestamp: true});
     private rpcCallbackProxy: RpcCallbackProxy;
 
     constructor(

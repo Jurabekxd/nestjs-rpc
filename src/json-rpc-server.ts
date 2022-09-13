@@ -91,13 +91,13 @@ export class JsonRpcServer {
     private lifecycle(request: TRequest, response: TResponse, next: () => void): Observable<RpcResponse> {
         return of<RpcRequestInterface>(request.body as RpcRequestInterface)
             .pipe(
-                tap(body => this.assertRPCStructure(body)),
-                tap(body => {
+                tap((body: RpcRequestInterface) => this.assertRPCStructure(body)),
+                tap((body: RpcRequestInterface) => {
                     if (this.handlers.has(body.method) === false) {
                         throw new RpcMethodNotFoundException();
                     }
                 }),
-                switchMap(body => this.resolveWaitingResponse(body, request, response, next)),
+                switchMap((body: RpcRequestInterface) => this.resolveWaitingResponse(body, request, response, next)),
                 catchError(err => of(err)),
                 map(result => this.resolveResponseOrNullIfNotification(result, request.body)),
             );
